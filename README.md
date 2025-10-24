@@ -32,7 +32,15 @@ Nested routing for clean API structure
 
 📁 Project Structure
 
-<pre> ```text kanmind/ ├── user_auth_app/ ├── kanban_app/ ├── core/ # API routing (combines app-level endpoints) ├── manage.py └── db.sqlite3 ``` </pre>
+```text
+kanmind/
+├── user_auth_app/
+├── kanban_app/
+├── core/                  # API routing (combines app-level endpoints)
+├── manage.py
+└── db.sqlite3
+```
+
 
 📦 Installation
 
