@@ -1,8 +1,6 @@
 <h1 align="center">KanMind</h1>
 
 <p align="center">
-  <img src="https://img.icons8.com/color/96/kanban.png" alt="kanmind-logo" width="120px" height="120px"/>
-  <br>
   <em>KanMind is a backend application built with Django and Django REST Framework (DRF).  
   It provides a RESTful API for a Kanban-style task management system.  
   Users can register, log in, and manage their own boards and tasks in an isolated environment.</em>
@@ -18,7 +16,6 @@
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.13.2-blue?logo=python&logoColor=white" alt="Python version"></a>
   <a href="https://www.djangoproject.com/"><img src="https://img.shields.io/badge/Django-5.2.7-success?logo=django&logoColor=white" alt="Django version"></a>
   <a href="https://www.django-rest-framework.org/"><img src="https://img.shields.io/badge/DRF-3.16.1-red?logo=django&logoColor=white" alt="DRF version"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
 <hr>
@@ -65,12 +62,9 @@ kanmind/
    git clone git@github.com:MarcoAlber/KanMind.git .
 Create a virtual environment and activate it
 
-bash
-Code kopieren
-python -m venv venv
-source venv/bin/activate
-# On Windows use:
-venv\Scripts\activate
+  ```bash
+  python -m venv venv
+  source venv/bin/activate  # On Windows use: venv\Scripts\activate
 Install dependencies
 
 bash
@@ -90,39 +84,45 @@ python manage.py runserver
 ---
 
 ## 🔑 API Endpoints
-Authentication
-Method	Endpoint	Description
-POST	/api/registration/	Register a new user
-POST	/api/login/	Log in to receive authentication token
 
-Boards
-Method	Endpoint	Description
-GET	/api/boards/	List all boards of the authenticated user
-POST	/api/boards/	Create a new board
-GET	/api/boards/{board_id}/	Retrieve details of a specific board
-PATCH	/api/boards/{board_id}/	Update a board
-DELETE	/api/boards/{board_id}/	Delete a board
-GET	/api/email-check/	Check if an email is already registered
+- Authentication
+| Method | Endpoint             | Description                            |
+| ------ | -------------------- | -------------------------------------- |
+| POST   | `/api/registration/` | Register a new user                    |
+| POST   | `/api/login/`        | Log in to receive authentication token |
 
-Tasks
-Method	Endpoint	Description
-GET	/api/tasks/assigned-to-me/	List tasks assigned to the authenticated user
-GET	/api/tasks/reviewing/	List tasks the user is reviewing
-POST	/api/tasks/	Create a new task
-PATCH	/api/tasks/{task_id}/	Update a task
-DELETE	/api/tasks/{task_id}/	Delete a task
-GET	/api/tasks/{task_id}/comments/	List comments on a task
-POST	/api/tasks/{task_id}/comments/	Add a comment to a task
-DELETE	/api/tasks/{task_id}/comments/{comment_id}/	Delete a comment
+
+- Boards
+| Method | Endpoint                  | Description                               |
+| ------ | ------------------------- | ----------------------------------------- |
+| GET    | `/api/boards/`            | List all boards of the authenticated user |
+| POST   | `/api/boards/`            | Create a new board                        |
+| GET    | `/api/boards/{board_id}/` | Retrieve details of a specific board      |
+| PATCH  | `/api/boards/{board_id}/` | Update a board                            |
+| DELETE | `/api/boards/{board_id}/` | Delete a board                            |
+| GET    | `/api/email-check/`       | Check if an email is already registered   |
+
+
+- Tasks
+| Method | Endpoint                                      | Description                                   |
+| ------ | --------------------------------------------- | --------------------------------------------- |
+| GET    | `/api/tasks/assigned-to-me/`                  | List tasks assigned to the authenticated user |
+| GET    | `/api/tasks/reviewing/`                       | List tasks the user is reviewing              |
+| POST   | `/api/tasks/`                                 | Create a new task                             |
+| PATCH  | `/api/tasks/{task_id}/`                       | Update a task                                 |
+| DELETE | `/api/tasks/{task_id}/`                       | Delete a task                                 |
+| GET    | `/api/tasks/{task_id}/comments/`              | List comments on a task                       |
+| POST   | `/api/tasks/{task_id}/comments/`              | Add a comment to a task                       |
+| DELETE | `/api/tasks/{task_id}/comments/{comment_id}/` | Delete a comment                              |
+
 
 ---
 
 ## 🥪 Testing (optional)
 If you have tests in place, run:
 
-bash
-Code kopieren
 python manage.py test
+
 
 ---
 
