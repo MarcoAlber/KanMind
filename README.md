@@ -8,11 +8,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MarcoAlber/KanMind"><strong>GitHub Repository</strong></a>
-  <br>
-</p>
-
-<p align="center">
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.13.2-blue?logo=python&logoColor=white" alt="Python version"></a>
   <a href="https://www.djangoproject.com/"><img src="https://img.shields.io/badge/Django-5.2.7-success?logo=django&logoColor=white" alt="Django version"></a>
   <a href="https://www.django-rest-framework.org/"><img src="https://img.shields.io/badge/DRF-3.16.1-red?logo=django&logoColor=white" alt="DRF version"></a>
@@ -58,27 +53,25 @@ kanmind/
 ## 📦 Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone git@github.com:MarcoAlber/KanMind.git .
-Create a virtual environment and activate it
+```bash
+git clone git@github.com:MarcoAlber/KanMind.git .
 
-  ```bash
-  python -m venv venv
-  source venv/bin/activate  # On Windows use: venv\Scripts\activate
-Install dependencies
+2. **Create a virtual environment and activate it**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
 
-bash
-Code kopieren
-pip install -r requirements.txt
-Apply migrations
+3. **Install dependencies**
+```bash
+  pip install -r requirements.txt
 
-bash
-Code kopieren
+4. **Apply migrations**
+```bash
 python manage.py migrate
-Run the development server
 
-bash
-Code kopieren
+5. **Run the development server**
+
+```bash
 python manage.py runserver
 
 ---
