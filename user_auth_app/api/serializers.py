@@ -4,10 +4,17 @@ from django.contrib.auth.models import User
 
 
 class EmailAuthTokenSerializer(serializers.Serializer):
+    """
+    Serializer for authenticating users via email and password.
+    """
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
+        """
+        Validate email and password, and authenticate the user.
+        Raises ValidationError if credentials are invalid.
+        """
         email = data.get('email')
         password = data.get('password')
 
@@ -26,6 +33,10 @@ class EmailAuthTokenSerializer(serializers.Serializer):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for registering a new user.
+    Includes email, password, repeated password, and full name.
+    """
     repeated_password = serializers.CharField(write_only=True)
     fullname = serializers.CharField()
 
@@ -39,16 +50,26 @@ class RegistrationSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
+        """
+        Ensure password and repeated_password match.
+        """
         if data['password'] != data['repeated_password']:
             raise serializers.ValidationError({'repeated_password': 'Passwords do not match'})
         return data    
 
     def validate_email(self, value):
+        """
+        Ensure email is unique.
+        """
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("Diese E-Mail wird bereits verwendet.")
         return value
     
     def create(self, validated_data):
+        """
+        Create and return a new user with hashed password.
+        Splits full name into first and last name.
+        """
         password = validated_data.pop('password')
         validated_data.pop('repeated_password')
         full_name = validated_data.pop('fullname')

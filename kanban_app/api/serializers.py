@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Django User with full name field.
+    """
     fullname = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -11,10 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'fullname']
     
     def get_fullname(self, obj):
+        """Return full name of the user."""
         fullname = obj.first_name + " " + obj.last_name
         return fullname
 
 class TaskSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Task model.
+    Supports assignment, review, comments count, and board validation.
+    """
     board = serializers.PrimaryKeyRelatedField(queryset=Board.objects.all(), required=False)
     assignee_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
     reviewer_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
@@ -32,6 +40,7 @@ class TaskSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'assignee', 'reviewer', 'comments_count']
 
     def to_representation(self, instance):
+        """Customize representation for PATCH requests (hide board and comments_count)."""
         data = super().to_representation(instance)
         request = self.context.get('request')
         if request and request.method == 'PATCH':
@@ -41,6 +50,10 @@ class TaskSerializer(serializers.ModelSerializer):
         return data
     
     def validate(self, data):
+        """
+        Validate board membership and ensure assignee/reviewer are board members.
+        Prevent changing board on updates.
+        """
         request_user = self.context['request'].user
         method = self.context['request'].method
         board = data.get('board')
@@ -74,9 +87,11 @@ class TaskSerializer(serializers.ModelSerializer):
         return data
     
     def get_comments_count(self, obj):
+        """Return total comments on the task."""
         return obj.comments.count()
     
     def create(self, validated_data):
+        """Create task, setting assignee, reviewer, and creator."""
         request_user = self.context['request'].user
         assignee_id = validated_data.pop('assignee_id', None)
         reviewer_id = validated_data.pop('reviewer_id', None)
@@ -89,6 +104,10 @@ class TaskSerializer(serializers.ModelSerializer):
         return task
 
 class BoardSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Board model.
+    Handles member IDs input and summary counts.
+    """
     members = serializers.ListField( 
         child=serializers.IntegerField(),
         write_only=True)
@@ -108,6 +127,7 @@ class BoardSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
+        """Ensure all member IDs are valid users."""
         members_ids = data.get('members', [])
         users = User.objects.filter(id__in=members_ids)
         if len(users) != len(set(members_ids)):
@@ -115,18 +135,23 @@ class BoardSerializer(serializers.ModelSerializer):
         return data
 
     def get_member_count(self, obj):
+        """Return the total number of members in the board."""
         return obj.members.count()
     
     def get_ticket_count(self, obj):
+        """Return the total number of tasks (tickets) associated with the board."""
         return obj.tasks.count()
     
     def get_tasks_to_do_count(self, obj):
+        """Return the number of tasks in the board with status 'to-do'."""
         return obj.tasks.filter(status='to-do').count()
     
     def get_tasks_high_prio_count(self, obj):
+        """Return the number of tasks in the board with priority set to 'high'."""
         return obj.tasks.filter(priority='high').count()
 
     def create(self, validated_data):
+        """Create a board and set its members including the owner."""
         members_ids = validated_data.pop('members')
         owner = self.context['request'].user
         if owner.id not in members_ids:
@@ -137,6 +162,7 @@ class BoardSerializer(serializers.ModelSerializer):
         return board
 
 class BoardDetailSerializer(serializers.ModelSerializer):
+    """Detailed serializer for a board including members and tasks."""
     members = UserSerializer(many=True, read_only=True)
     tasks = TaskSerializer(many=True, read_only=True)
 
@@ -147,6 +173,10 @@ class BoardDetailSerializer(serializers.ModelSerializer):
         ]
 
 class BoardUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for updating a board.
+    Validates member removal against tasks.
+    """
     members = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
     owner_data = UserSerializer(source='owner', read_only=True)
     members_data = UserSerializer(source='members', many=True, read_only=True)
@@ -156,6 +186,7 @@ class BoardUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'members', 'owner_data', 'members_data']
 
     def validate_members(self, value):
+        """Validate member IDs and prevent removal of users linked to tasks."""
         owner_id = self.instance.owner.id if self.instance else None
         if owner_id and owner_id not in value:
             value.append(owner_id)
@@ -184,6 +215,7 @@ class BoardUpdateSerializer(serializers.ModelSerializer):
         return value
     
     def update(self, instance, validated_data):
+        """Update board title and members."""
         members_ids = validated_data.get('members', None)
 
         instance.title = validated_data.get('title', instance.title)
@@ -196,6 +228,7 @@ class BoardUpdateSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Serializer for task comments with author full name."""
     author = serializers.SerializerMethodField()
 
     class Meta:
@@ -204,9 +237,11 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'author']
 
     def get_author(self, obj):
+        """Return author's full name."""
         return f"{obj.author.first_name} {obj.author.last_name}".strip()
     
     def create(self, validated_data):
+        """Set the current user as the comment author on creation."""
         request = self.context['request']
         validated_data['author'] = request.user
         return super().create(validated_data)

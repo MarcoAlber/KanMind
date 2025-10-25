@@ -8,9 +8,17 @@ from django.contrib.auth.models import User
 
 
 class RegistrationView(APIView):
+    """
+    API endpoint for registering a new user.
+    Allows anyone to create an account and returns an auth token on success.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request):
+        """
+        Handle POST request to register a new user.
+        Returns auth token, full name, email, and user ID if successful.
+        """
         serializer = RegistrationSerializer(data=request.data)
 
         data = {}
@@ -35,9 +43,17 @@ class RegistrationView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomLoginView(APIView):
+    """
+    API endpoint for user login using email and password.
+    Returns auth token and user info on successful login.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request):
+        """
+        Handle POST request to authenticate a user.
+        Returns token, email, full name, and user ID if credentials are valid.
+        """
         serializer = EmailAuthTokenSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -62,9 +78,18 @@ class CustomLoginView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class EmailCheckView(APIView):
+    """
+    API endpoint to check if a given email exists in the system.
+    Requires authentication.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        """
+        Handle GET request with 'email' query parameter.
+        Returns user ID, email, and full name if found.
+        Returns 404 if email does not exist.
+        """
         email = request.query_params.get('email')
 
         if not email:
