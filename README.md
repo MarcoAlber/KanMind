@@ -55,24 +55,29 @@ kanmind/
 1. **Clone the repository**
 ```bash
 git clone git@github.com:MarcoAlber/KanMind.git .
+```
 
 2. **Create a virtual environment and activate it**
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
+```
 
 3. **Install dependencies**
 ```bash
-  pip install -r requirements.txt
+pip install -r requirements.txt
+```
 
 4. **Apply migrations**
 ```bash
 python manage.py migrate
+```
 
 5. **Run the development server**
 
 ```bash
 python manage.py runserver
+```
 
 ---
 
@@ -113,15 +118,13 @@ python manage.py runserver
 
 ## 🥪 Testing (optional)
 If you have tests in place, run:
-
+```bash
 python manage.py test
-
+```
 
 ---
 
 ## ⚙️ Requirements
-ini
-Code kopieren
 asgiref==3.10.0
 Django==5.2.7
 django-cors-headers==4.9.0
