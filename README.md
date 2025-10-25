@@ -84,14 +84,14 @@ python manage.py runserver
 ## 🔑 API Endpoints
 
 
-- Authentication
+Authentication
 | Method | Endpoint             | Description                            |
 | ------ | -------------------- | -------------------------------------- |
 | POST   | `/api/registration/` | Register a new user                    |
 | POST   | `/api/login/`        | Log in to receive authentication token |
 
 
-- Boards
+Boards
 | Method | Endpoint                  | Description                               |
 | ------ | ------------------------- | ----------------------------------------- |
 | GET    | `/api/boards/`            | List all boards of the authenticated user |
@@ -102,18 +102,17 @@ python manage.py runserver
 | GET    | `/api/email-check/`       | Check if an email is already registered   |
 
 
-- Tasks
-| Method | Endpoint                                      | Description                                   |
-| ------ | --------------------------------------------- | --------------------------------------------- |
-| GET    | `/api/tasks/assigned-to-me/`                  | List tasks assigned to the authenticated user |
-| GET    | `/api/tasks/reviewing/`                       | List tasks the user is reviewing              |
-| POST   | `/api/tasks/`                                 | Create a new task                             |
-| PATCH  | `/api/tasks/{task_id}/`                       | Update a task                                 |
-| DELETE | `/api/tasks/{task_id}/`                       | Delete a task                                 |
-| GET    | `/api/tasks/{task_id}/comments/`              | List comments on a task                       |
-| POST   | `/api/tasks/{task_id}/comments/`              | Add a comment to a task                       |
-| DELETE | `/api/tasks/{task_id}/comments/{comment_id}/` | Delete a comment                              |
-
+Tasks
+| Method | Endpoint                                      | Description                          |
+| ------ | --------------------------------------------- | -------------------------------------|
+| GET    | `/api/tasks/assigned-to-me/`                  | List tasks assigned to the auth user |
+| GET    | `/api/tasks/reviewing/`                       | List tasks the user is reviewing     |
+| POST   | `/api/tasks/`                                 | Create a new task                    |
+| PATCH  | `/api/tasks/{task_id}/`                       | Update a task                        |
+| DELETE | `/api/tasks/{task_id}/`                       | Delete a task                        |
+| GET    | `/api/tasks/{task_id}/comments/`              | List comments on a task              |
+| POST   | `/api/tasks/{task_id}/comments/`              | Add a comment to a task              |
+| DELETE | `/api/tasks/{task_id}/comments/{comment_id}/` | Delete a comment                     |
 
 ---
 
