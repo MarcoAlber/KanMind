@@ -84,13 +84,15 @@ python manage.py runserver
 ## 🔑 API Endpoints
 
 - Authentication
+```text
 | Method | Endpoint             | Description                            |
 | ------ | -------------------- | -------------------------------------- |
 | POST   | `/api/registration/` | Register a new user                    |
 | POST   | `/api/login/`        | Log in to receive authentication token |
-
+```
 
 - Boards
+```text
 | Method | Endpoint                  | Description                               |
 | ------ | ------------------------- | ----------------------------------------- |
 | GET    | `/api/boards/`            | List all boards of the authenticated user |
@@ -99,9 +101,10 @@ python manage.py runserver
 | PATCH  | `/api/boards/{board_id}/` | Update a board                            |
 | DELETE | `/api/boards/{board_id}/` | Delete a board                            |
 | GET    | `/api/email-check/`       | Check if an email is already registered   |
-
+```
 
 - Tasks
+```text
 | Method | Endpoint                                      | Description                                   |
 | ------ | --------------------------------------------- | --------------------------------------------- |
 | GET    | `/api/tasks/assigned-to-me/`                  | List tasks assigned to the authenticated user |
@@ -112,7 +115,7 @@ python manage.py runserver
 | GET    | `/api/tasks/{task_id}/comments/`              | List comments on a task                       |
 | POST   | `/api/tasks/{task_id}/comments/`              | Add a comment to a task                       |
 | DELETE | `/api/tasks/{task_id}/comments/{comment_id}/` | Delete a comment                              |
-
+```
 
 ---
 
