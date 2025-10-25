@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied, NotFound
 from ..models import Board, Task, Comment
 from django.contrib.auth.models import User
 
@@ -56,34 +57,37 @@ class TaskSerializer(serializers.ModelSerializer):
         """
         request_user = self.context['request'].user
         method = self.context['request'].method
-        board = data.get('board')
 
+        # Board handling
+        board = data.get('board')
         if method == 'POST':
-            board = data.get('board')
             if not board:
                 raise serializers.ValidationError("board_id is required")
-        
         else:
             if 'board' in data:
                 raise serializers.ValidationError("Changing board is not allowed")
-        
             board = self.instance.board if self.instance else None
 
+        # Board existence / membership check
+        if not board:
+            raise NotFound("Board not found")
 
-        if board and not board.members.filter(id=request_user.id).exists():
-            raise serializers.ValidationError("Not a member of the board")
+        if not board.members.filter(id=request_user.id).exists():
+            raise PermissionDenied("You are not a member of this board")
 
+        # Assignee validation
         assignee_id = data.get('assignee_id')
-        reviewer_id = data.get('reviewer_id')
+        if assignee_id is not None:
+            if not board.members.filter(id=assignee_id).exists():
+                raise NotFound("Assignee not found in board")
 
-        if assignee_id and not board.members.filter(id=assignee_id).exists():
-            raise serializers.ValidationError("Assignee is not a member of the board")
-    
-        if reviewer_id and not board.members.filter(id=reviewer_id).exists():
-            raise serializers.ValidationError("Reviewer is not a member of the board")
+        # Reviewer validation
+        reviewer_id = data.get('reviewer_id')
+        if reviewer_id is not None:
+            if not board.members.filter(id=reviewer_id).exists():
+                raise NotFound("Reviewer not found in board")
 
         data['board'] = board
-
         return data
     
     def get_comments_count(self, obj):
@@ -97,10 +101,27 @@ class TaskSerializer(serializers.ModelSerializer):
         reviewer_id = validated_data.pop('reviewer_id', None)
         board = validated_data.pop('board')
 
-        assignee = User.objects.get(id=assignee_id) if assignee_id else None
-        reviewer = User.objects.get(id=reviewer_id) if reviewer_id else None
+        assignee = None
+        if assignee_id is not None:
+            try:
+                assignee = User.objects.get(id=assignee_id)
+            except User.DoesNotExist:
+                raise NotFound("Assignee user not found")
 
-        task = Task.objects.create(board=board, assignee=assignee, reviewer=reviewer, created_by=request_user,  **validated_data)
+        reviewer = None
+        if reviewer_id is not None:
+            try:
+                reviewer = User.objects.get(id=reviewer_id)
+            except User.DoesNotExist:
+                raise NotFound("Reviewer user not found")
+
+        task = Task.objects.create(
+            board=board,
+            assignee=assignee,
+            reviewer=reviewer,
+            created_by=request_user,
+            **validated_data
+        )
         return task
 
 class BoardSerializer(serializers.ModelSerializer):
