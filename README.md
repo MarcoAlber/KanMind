@@ -83,7 +83,6 @@ python manage.py runserver
 
 ## 🔑 API Endpoints
 
-
 Authentication
 | Method | Endpoint             | Description                            |
 | ------ | -------------------- | -------------------------------------- |
@@ -117,6 +116,7 @@ Tasks
 ---
 
 ## 🥪 Testing (optional)
+
 If you have tests in place, run:
 ```bash
 python manage.py test
@@ -125,6 +125,7 @@ python manage.py test
 ---
 
 ## ⚙️ Requirements
+
 - asgiref==3.10.0
 - Django==5.2.7
 - django-cors-headers==4.9.0
@@ -136,14 +137,14 @@ python manage.py test
 ---
 
 ## 📌 Notes
-The app uses SQLite for development.
-For production, switch to PostgreSQL or another robust DB.
 
-All users can only see and manage their own data.
-
-CORS is enabled, allowing frontend apps (e.g. React) to communicate with the backend.
+- The app uses SQLite for development.
+- For production, switch to PostgreSQL or another robust DB.
+- All users can only see and manage their own data.
+- CORS is enabled, allowing frontend apps (e.g. React) to communicate with the backend.
 
 ---
 
 ## 📨 Contact
+
 For any questions or contributions, feel free to reach out or open an issue.
