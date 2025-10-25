@@ -125,13 +125,13 @@ python manage.py test
 ---
 
 ## ⚙️ Requirements
-asgiref==3.10.0
-Django==5.2.7
-django-cors-headers==4.9.0
-djangorestframework==3.16.1
-drf-nested-routers==0.95.0
-sqlparse==0.5.3
-tzdata==2025.2
+- asgiref==3.10.0
+- Django==5.2.7
+- django-cors-headers==4.9.0
+- djangorestframework==3.16.1
+- drf-nested-routers==0.95.0
+- sqlparse==0.5.3
+- tzdata==2025.2
 
 ---
 
