@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from rest_framework.exceptions import NotFound
 from kanban_app.models import Board, Task
 
 
@@ -32,9 +33,13 @@ class IsTaskBoardMemberOrOwner(BasePermission):
 
     def has_permission(self, request, view):
         """
-        General permission check before object retrieval.
-        For POST, validates board membership or ownership.
-        For other methods, checks that the user is board member or owner.
+        Check if the user can access or create a task.
+
+        POST: verify board exists and user is owner or member.
+        Other methods: verify task exists and user is board owner or member.
+
+        Raises NotFound if the board or task does not exist.
+        Returns True if permission is granted, False otherwise.
         """
         if request.method == "POST":
             board_id = request.data.get('board')
@@ -42,7 +47,7 @@ class IsTaskBoardMemberOrOwner(BasePermission):
                 try:
                     board = Board.objects.get(id=board_id)
                 except Board.DoesNotExist:
-                    return False
+                    raise NotFound("Board not found.")
             else:
                 task_id = view.kwargs.get('task_pk')
                 if not task_id:
@@ -51,13 +56,13 @@ class IsTaskBoardMemberOrOwner(BasePermission):
                     task = Task.objects.get(id=task_id)
                     board = task.board
                 except Task.DoesNotExist:
-                    return False
+                    raise NotFound("Task not found.")
 
             return (
                 board.owner == request.user or
                 board.members.filter(id=request.user.id).exists()
             )
-        
+
         task_id = view.kwargs.get('pk') or view.kwargs.get('task_pk')
         if not task_id:
             return False
@@ -66,7 +71,7 @@ class IsTaskBoardMemberOrOwner(BasePermission):
             task = Task.objects.get(id=task_id)
             board = task.board
         except Task.DoesNotExist:
-            return False
+            raise NotFound("Task not found.")
 
         return (
             board.owner == request.user or
