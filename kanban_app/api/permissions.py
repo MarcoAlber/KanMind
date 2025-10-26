@@ -33,13 +33,9 @@ class IsTaskBoardMemberOrOwner(BasePermission):
 
     def has_permission(self, request, view):
         """
-        Check if the user can access or create a task.
-
-        POST: verify board exists and user is owner or member.
-        Other methods: verify task exists and user is board owner or member.
-
-        Raises NotFound if the board or task does not exist.
-        Returns True if permission is granted, False otherwise.
+        General permission check before object retrieval.
+        For POST, validates board membership or ownership.
+        For other methods, checks that the user is board member or owner.
         """
         if request.method == "POST":
             board_id = request.data.get('board')
